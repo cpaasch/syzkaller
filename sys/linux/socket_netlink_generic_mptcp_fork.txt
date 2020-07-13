@@ -10,7 +10,7 @@ include <uapi/linux/genetlink.h>
 resource genl_mptcpfork_family_id[int16]
 type msghdr_nl_mptcpfork[CMD] msghdr_netlink[netlink_msg_t[genl_mptcpfork_family_id, genlmsghdr_t[CMD], mptcp_nl_attr]]
 
-syz_genetlink_get_family_id$mptcp(name ptr[in, string["mptcp"]]) genl_mptcpfork_family_id
+syz_genetlink_get_family_id$mptcpfork(name ptr[in, string["mptcp"]]) genl_mptcpfork_family_id
 
 define MPTCP_CMD_UNSPEC	0
 define MPTCP_EVENT_CREATED	1
