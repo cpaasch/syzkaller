@@ -1,0 +1,79 @@
+# Copyright 2018 syzkaller project authors. All rights reserved.
+# Use of this source code is governed by Apache 2 LICENSE that can be found in the LICENSE file.
+
+# AF_NETLINK/NETLINK_GENERIC/fou support.
+
+include <linux/net.h>
+include <uapi/linux/netlink.h>
+include <uapi/linux/genetlink.h>
+
+resource genl_mptcp_family_id[int16]
+type msghdr_nl_mptcp[CMD] msghdr_netlink[netlink_msg_t[genl_mptcp_family_id, genlmsghdr_t[CMD], mptcp_nl_attr]]
+
+syz_genetlink_get_family_id$mptcp(name ptr[in, string["mptcp"]]) genl_mptcp_family_id
+
+define MPTCP_CMD_UNSPEC	0
+define MPTCP_EVENT_CREATED	1
+define MPTCP_EVENT_ESTABLISHED	2
+define MPTCP_EVENT_CLOSED	3
+
+define MPTCP_CMD_ANNOUNCE	4
+define MPTCP_CMD_REMOVE	5
+define MPTCP_EVENT_ANNOUNCED	6
+define MPTCP_EVENT_REMOVED	7
+
+define MPTCP_CMD_SUB_CREATE	8
+define MPTCP_CMD_SUB_DESTROY	9
+define MPTCP_EVENT_SUB_ESTABLISHED	10
+define MPTCP_EVENT_SUB_CLOSED	11
+
+define MPTCP_CMD_SUB_PRIORITY	12
+define MPTCP_EVENT_SUB_PRIORITY	13
+
+define MPTCP_CMD_SET_FILTER	14
+
+define MPTCP_CMD_EXIST	15
+
+sendmsg$MPTCP_CMD_ANNOUNCE(fd sock_nl_generic, msg ptr[in, msghdr_nl_mptcp[MPTCP_CMD_ANNOUNCE]], f flags[send_flags])
+sendmsg$MPTCP_CMD_REMOVE(fd sock_nl_generic, msg ptr[in, msghdr_nl_mptcp[MPTCP_CMD_REMOVE]], f flags[send_flags])
+sendmsg$MPTCP_CMD_SUB_CREATE(fd sock_nl_generic, msg ptr[in, msghdr_nl_mptcp[MPTCP_CMD_SUB_CREATE]], f flags[send_flags])
+sendmsg$MPTCP_CMD_SUB_DESTROY(fd sock_nl_generic, msg ptr[in, msghdr_nl_mptcp[MPTCP_CMD_SUB_DESTROY]], f flags[send_flags])
+sendmsg$MPTCP_CMD_SUB_PRIORITY(fd sock_nl_generic, msg ptr[in, msghdr_nl_mptcp[MPTCP_CMD_SUB_PRIORITY]], f flags[send_flags])
+sendmsg$MPTCP_CMD_SET_FILTER(fd sock_nl_generic, msg ptr[in, msghdr_nl_mptcp[MPTCP_CMD_SET_FILTER]], f flags[send_flags])
+sendmsg$MPTCP_CMD_EXIST(fd sock_nl_generic, msg ptr[in, msghdr_nl_mptcp[MPTCP_CMD_EXIST]], f flags[send_flags])
+
+define MPTCP_ATTR_TOKEN	1
+define MPTCP_ATTR_FAMILY	2
+define MPTCP_ATTR_LOC_ID	3
+define MPTCP_ATTR_REM_ID	4
+define MPTCP_ATTR_SADDR4	5
+define MPTCP_ATTR_SADDR6	6
+define MPTCP_ATTR_DADDR4	7
+define MPTCP_ATTR_DADDR6	8
+define MPTCP_ATTR_SPORT	9
+define MPTCP_ATTR_DPORT	10
+define MPTCP_ATTR_BACKUP	11
+define MPTCP_ATTR_ERROR	12
+define MPTCP_ATTR_FLAGS	13
+define MPTCP_ATTR_TIMEOUT	14
+define MPTCP_ATTR_IF_IDX	15
+
+mptcp_nl_attr [
+	MPTCP_ATTR_TOKEN	nlattr[MPTCP_ATTR_TOKEN, int32]
+	MPTCP_ATTR_FAMILY	nlattr[MPTCP_ATTR_FAMILY, flags[mptcp_families, int8]]
+	MPTCP_ATTR_LOC_ID	nlattr[MPTCP_ATTR_LOC_ID, int8]
+	MPTCP_ATTR_REM_ID	nlattr[MPTCP_ATTR_REM_ID, int8]
+	MPTCP_ATTR_SADDR4	nlattr[MPTCP_ATTR_SADDR4, ipv4_addr]
+	MPTCP_ATTR_SADDR6	nlattr[MPTCP_ATTR_SADDR6, ipv6_addr]
+	MPTCP_ATTR_DADDR4	nlattr[MPTCP_ATTR_DADDR4, ipv4_addr]
+	MPTCP_ATTR_DADDR6	nlattr[MPTCP_ATTR_DADDR6, ipv6_addr]
+	MPTCP_ATTR_SPORT	nlattr[MPTCP_ATTR_SPORT, sock_port]
+	MPTCP_ATTR_DPORT	nlattr[MPTCP_ATTR_DPORT, sock_port]
+	MPTCP_ATTR_BACKUP	nlattr[MPTCP_ATTR_BACKUP, int8]
+	MPTCP_ATTR_ERROR	nlattr[MPTCP_ATTR_ERROR, int8]
+	MPTCP_ATTR_FLAGS	nlattr[MPTCP_ATTR_FLAGS, int32]
+	MPTCP_ATTR_TIMEOUT	nlattr[MPTCP_ATTR_TIMEOUT, int32]
+	MPTCP_ATTR_IF_IDX	nlattr[MPTCP_ATTR_IF_IDX, ifindex]
+] [varlen]
+
+mptcp_families = AF_INET, AF_INET6
