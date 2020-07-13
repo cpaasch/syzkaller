@@ -60,7 +60,7 @@ define MPTCP_ATTR_IF_IDX	15
 
 mptcp_nl_attr [
 	MPTCP_ATTR_TOKEN	nlattr[MPTCP_ATTR_TOKEN, int32]
-	MPTCP_ATTR_FAMILY	nlattr[MPTCP_ATTR_FAMILY, flags[mptcp_families, int8]]
+	MPTCP_ATTR_FAMILY	nlattr[MPTCP_ATTR_FAMILY, flags[mptcpfork_families, int8]]
 	MPTCP_ATTR_LOC_ID	nlattr[MPTCP_ATTR_LOC_ID, int8]
 	MPTCP_ATTR_REM_ID	nlattr[MPTCP_ATTR_REM_ID, int8]
 	MPTCP_ATTR_SADDR4	nlattr[MPTCP_ATTR_SADDR4, ipv4_addr]
@@ -76,4 +76,4 @@ mptcp_nl_attr [
 	MPTCP_ATTR_IF_IDX	nlattr[MPTCP_ATTR_IF_IDX, ifindex]
 ] [varlen]
 
-mptcp_families = AF_INET, AF_INET6
+mptcpfork_families = AF_INET, AF_INET6
